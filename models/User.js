@@ -14,7 +14,8 @@ const userSchema = new mongoose.Schema({
   experience: { type: String },
   mobileNumber: { type: String, match: /^\d{10}$/ },
   skills: { type: [String] },
-  availabilityDropdown: { type: String }
+  availabilityDropdown: { type: String },
+  isAdmin: { type: Boolean, default: false }
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
