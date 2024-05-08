@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const validRoles = ['user', 'volunteer', 'emergencyresponder'];
+const validRoles = ['user', 'volunteer', 'emergencyresponder','admin'];
 
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
