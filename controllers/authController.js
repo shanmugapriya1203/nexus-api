@@ -1,9 +1,9 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User.js');
-const { generateToken } = require('../utils/authUtils.js');
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
+import { generateToken } from '../utils/authUtils.js';
 
-exports.register = async (req, res, next) => {
+export const register = async (req, res, next) => {
   try {
     const existingUser = await User.findOne({ $or: [{ username: req.body.username }, { email: req.body.email }] });
     if (existingUser) {
@@ -23,8 +23,8 @@ exports.register = async (req, res, next) => {
       phone: req.body.phone,
       address: req.body.address,
       role: req.body.role,
-      age:req.body.age,
-      city:req.body.city,
+      age: req.body.age,
+      city: req.body.city,
       isAdmin: req.body.isAdmin || false, // Set isAdmin to false if not provided
       profession: req.body.profession,
       experience: req.body.experience,
@@ -42,13 +42,9 @@ exports.register = async (req, res, next) => {
   }
 };
 
-
-
-
-exports.login = async (req, res, next) => {
+export const login = async (req, res, next) => {
   try {
     const { username, password } = req.body;
-
 
     const user = await User.findOne({ username });
     if (!user) {
@@ -66,13 +62,12 @@ exports.login = async (req, res, next) => {
 
     const token = generateToken({ id: user._id, username: user.username });
 
-
     res.status(200).json({
       message: 'Login successful',
       token,
       user
     });
   } catch (error) {
-    next(error); 
+    next(error); // Pass the error to the next middleware
   }
 };
