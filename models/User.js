@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
   fullName: { type: String, required: true },
   city: { type: String, required: true },
   age: { type: Number, required: true },
+  bloodGroup: { type: String }, 
   profession: { type: String },
   experience: { type: String },
   mobileNumber: { type: String, match: /^\d{10}$/ },
