@@ -1,6 +1,4 @@
-// models/Shelter.js
-
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const shelterSchema = new mongoose.Schema({
     name: {

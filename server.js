@@ -2,7 +2,10 @@ import express from 'express';
 import connectDB from './db.js';
 import cors from 'cors';
 import { config as dotenvConfig } from 'dotenv';
-
+import authRoutes from './routes/authRoute.js';
+import userRoutes from './routes/userRoute.js';
+import shelterRoutes from './routes/shelterRoute.js'
+import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
 dotenvConfig();
@@ -14,11 +17,12 @@ app.use(express.json());
 connectDB();
 app.use(bodyParser.json());
 app.use(cookieParser());
-import authRoutes from './routes/authRoute.js';
+
 app.use('/api/auth', authRoutes);
-import userRoutes from './routes/userRoute.js';
-import bodyParser from 'body-parser';
+
 app.use('/api/user', userRoutes);
+
+app.use('/api/shelter',shelterRoutes)
 
 const PORT = process.env.PORT || 5000;
 
