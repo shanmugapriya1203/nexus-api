@@ -2,6 +2,12 @@ import mongoose from 'mongoose';
 
 const validRoles = ['user', 'volunteer', 'emergencyresponder', 'admin'];
 
+const certificationSchema = new mongoose.Schema({
+  certificationName: { type: String, required: true },
+  certificationDate: { type: Date, required: true },
+  expirationDate: { type: Date, required: true },
+});
+
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true, match: /^\S+@\S+\.\S+$/ },
@@ -13,11 +19,12 @@ const userSchema = new mongoose.Schema({
   bloodGroup: { type: String }, 
   profession: { type: String },
   experience: { type: String },
-  mobileNumber: { type: String, match: /^\d{10}$/ },
+  mobileNumber: { type: String, },
   skills: { type: [String] },
   availabilityDropdown: { type: String },
   isAdmin: { type: Boolean, default: false },
-  assignedTasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }]
+  assignedTasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }],
+  certifications: [certificationSchema],
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

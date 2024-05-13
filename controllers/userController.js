@@ -18,6 +18,7 @@ try {
     next(error)
 }
 }
+
 export const updateUser = async (req, res, next) => {
   if (req.user.id !== req.params.userId) {
     return res.status(401).json({ message: 'You are not authorized to update this user' });
