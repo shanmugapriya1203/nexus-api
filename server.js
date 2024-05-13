@@ -5,6 +5,7 @@ import { config as dotenvConfig } from 'dotenv';
 import authRoutes from './routes/authRoute.js';
 import userRoutes from './routes/userRoute.js';
 import shelterRoutes from './routes/shelterRoute.js'
+import volunteerRoutes from './routes/volunteerRoute.js'
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
@@ -23,6 +24,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 
 app.use('/api/shelter',shelterRoutes)
+
+app.use('/api/volunteers',volunteerRoutes)
 
 const PORT = process.env.PORT || 5000;
 

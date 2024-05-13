@@ -16,7 +16,8 @@ const userSchema = new mongoose.Schema({
   mobileNumber: { type: String, match: /^\d{10}$/ },
   skills: { type: [String] },
   availabilityDropdown: { type: String },
-  isAdmin: { type: Boolean, default: false }
+  isAdmin: { type: Boolean, default: false },
+  assignedTasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }]
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
