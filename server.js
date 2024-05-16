@@ -1,13 +1,13 @@
-import express from 'express';
-import connectDB from './db.js';
-import cors from 'cors';
-import { config as dotenvConfig } from 'dotenv';
-import authRoutes from './routes/authRoute.js';
-import userRoutes from './routes/userRoute.js';
-import shelterRoutes from './routes/shelterRoute.js'
-import volunteerRoutes from './routes/volunteerRoute.js'
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
+import express from "express";
+import connectDB from "./db.js";
+import cors from "cors";
+import { config as dotenvConfig } from "dotenv";
+import authRoutes from "./routes/authRoute.js";
+import userRoutes from "./routes/userRoute.js";
+import shelterRoutes from "./routes/shelterRoute.js";
+import volunteerRoutes from "./routes/volunteerRoute.js";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 
 dotenvConfig();
 
@@ -19,13 +19,13 @@ connectDB();
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use('/api/auth', authRoutes);
+app.use("/api/auth", authRoutes);
 
-app.use('/api/user', userRoutes);
+app.use("/api/user", userRoutes);
 
-app.use('/api/shelter',shelterRoutes)
+app.use("/api/shelter", shelterRoutes);
 
-app.use('/api/volunteers',volunteerRoutes)
+app.use("/api/volunteers", volunteerRoutes);
 
 const PORT = process.env.PORT || 3000;
 
