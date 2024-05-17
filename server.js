@@ -7,6 +7,7 @@ import userRoutes from "./routes/userRoute.js";
 import shelterRoutes from "./routes/shelterRoute.js";
 import volunteerRoutes from "./routes/volunteerRoute.js";
 import planRoutes from "./routes/planRoute.js";
+import incidentRoutes from "./routes/incidentRoute.js";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 
@@ -29,6 +30,8 @@ app.use("/api/shelter", shelterRoutes);
 app.use("/api/volunteers", volunteerRoutes);
 
 app.use("/api/plans", planRoutes);
+
+app.use("/api/incident", incidentRoutes);
 
 const PORT = process.env.PORT || 3000;
 

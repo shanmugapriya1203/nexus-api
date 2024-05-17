@@ -2,14 +2,12 @@ import mongoose from "mongoose";
 
 const validRoles = ["user", "volunteer", "emergencyresponder", "admin"];
 
-// Schema for user certifications
 const certificationSchema = new mongoose.Schema({
   certificationName: { type: String, required: true },
   certificationDate: { type: Date, required: true },
   expirationDate: { type: Date, required: true },
 });
 
-// Main user schema
 const userSchema = new mongoose.Schema(
   {
     username: { type: String, required: true, unique: true },
@@ -32,13 +30,12 @@ const userSchema = new mongoose.Schema(
     skills: { type: [String] },
     availabilityDropdown: { type: String },
     isAdmin: { type: Boolean, default: false },
-    assignedTasks: [{ type: mongoose.Types.ObjectId, ref: "Task" }],
+    responderType: { type: String, default: "defaultType" },
     certifications: [certificationSchema],
   },
   { timestamps: true }
 );
 
-// Create User model
 const User = mongoose.model("User", userSchema);
 
 export default User;

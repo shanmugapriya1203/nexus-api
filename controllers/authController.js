@@ -2,14 +2,14 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import { generateToken } from "../utils/authUtils.js";
+import Responder from "../models/Responder.js";
 
 export const register = async (req, res, next) => {
   try {
-    const existingUser = await User.findOne({
-      $or: [{ username: req.body.username }, { email: req.body.email }],
-    });
+    const existingUser = await User.findOne({ username: req.body.username });
+
     if (existingUser) {
-      const error = new Error("Username or email already exists");
+      const error = new Error("Username already exists");
       error.statusCode = 400;
       throw error;
     }
@@ -35,6 +35,38 @@ export const register = async (req, res, next) => {
     });
 
     const savedUser = await newUser.save();
+    if (req.body.role === "emergencyresponder" && req.body.profession) {
+      let responderType = "";
+      switch (req.body.profession) {
+        case "firefighter":
+          responderType = "firefighter";
+          break;
+        case "nurse":
+          responderType = "nurse";
+          break;
+        case "doctor":
+          responderType = "doctor";
+          break;
+        case "engineer":
+          responderType = "engineer";
+          break;
+        case "paramedic":
+          responderType = "paramedic";
+          break;
+        case "technician":
+          responderType = "technician";
+          break;
+        default:
+          responderType = "defaultType";
+      }
+
+      // Create a new responder
+      const responder = new Responder({
+        user: savedUser._id,
+        responderType: responderType,
+      });
+      await responder.save();
+    }
 
     const token = generateToken({
       id: savedUser._id,
