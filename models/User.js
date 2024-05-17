@@ -30,6 +30,7 @@ const userSchema = new mongoose.Schema(
     skills: { type: [String] },
     availabilityDropdown: { type: String },
     isAdmin: { type: Boolean, default: false },
+    assignedTasks: [{ type: mongoose.Types.ObjectId, ref: "Task" }],
     responderType: { type: String, default: "defaultType" },
     certifications: [certificationSchema],
   },
