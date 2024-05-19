@@ -1,4 +1,6 @@
 import express from "express";
+import http from "http";
+import { Server } from "socket.io";
 import connectDB from "./db.js";
 import cors from "cors";
 import { config as dotenvConfig } from "dotenv";
@@ -8,31 +10,49 @@ import shelterRoutes from "./routes/shelterRoute.js";
 import volunteerRoutes from "./routes/volunteerRoute.js";
 import planRoutes from "./routes/planRoute.js";
 import incidentRoutes from "./routes/incidentRoute.js";
+import alertRoutes from "./routes/alertRoute.js";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 
 dotenvConfig();
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
+
+// Middleware to pass io instance to routes
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
 app.use(cors({ credentials: true }));
 app.use(express.json());
-
-connectDB();
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+connectDB();
+
 app.use("/api/auth", authRoutes);
-
 app.use("/api/user", userRoutes);
-
 app.use("/api/shelter", shelterRoutes);
-
 app.use("/api/volunteers", volunteerRoutes);
-
 app.use("/api/plans", planRoutes);
-
 app.use("/api/incident", incidentRoutes);
+app.use("/api/alerts", alertRoutes);
+
+io.on("connection", (socket) => {
+  console.log("New client connected");
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
+  });
+});
 
 const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+server.listen(PORT, () => console.log(`Server started on port ${PORT}`));
