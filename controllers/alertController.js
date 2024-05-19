@@ -1,23 +1,26 @@
 import Alert from "../models/Alert.js";
-
-// Get all alerts
 export const getAllAlerts = async (req, res) => {
   try {
     const alerts = await Alert.find();
     res.json(alerts);
+    console.log(alerts);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
-
 export const createAlert = async (req, res) => {
-  const alert = new Alert({
-    type: req.body.type,
-    message: req.body.message,
-  });
+  const { type, message, location, severity } = req.body;
+
+  const alertData = {
+    type,
+    message,
+    location,
+    severity,
+  };
 
   try {
-    const newAlert = await alert.save();
+    const newAlert = new Alert(alertData);
+    await newAlert.save();
     req.io.emit("newAlert", newAlert);
     res.status(201).json(newAlert);
   } catch (err) {
