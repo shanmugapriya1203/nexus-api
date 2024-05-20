@@ -25,7 +25,6 @@ const io = new Server(server, {
   },
 });
 
-// Middleware to pass io instance to routes
 app.use((req, res, next) => {
   req.io = io;
   next();

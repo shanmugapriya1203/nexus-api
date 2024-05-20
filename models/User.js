@@ -33,6 +33,11 @@ const userSchema = new mongoose.Schema(
     assignedTasks: [{ type: mongoose.Types.ObjectId, ref: "Task" }],
     responderType: { type: String, default: "defaultType" },
     certifications: [certificationSchema],
+    profilePicture: {
+      type: String,
+      defaut:
+        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+    },
   },
   { timestamps: true }
 );

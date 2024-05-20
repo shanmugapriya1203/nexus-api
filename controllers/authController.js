@@ -1,8 +1,62 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import otpGenerator from "otp-generator";
+import twilio from "twilio";
+import dotenv from "dotenv";
 import User from "../models/User.js";
 import { generateToken } from "../utils/authUtils.js";
 import Responder from "../models/Responder.js";
+
+dotenv.config();
+
+const otpStore = {};
+
+const twilioClient = twilio(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
+
+export const requestOtp = async (req, res, next) => {
+  try {
+    const { mobileNumber } = req.body;
+    const otp = otpGenerator.generate(6, {
+      digits: true,
+      alphabets: false,
+      upperCase: false,
+      specialChars: false,
+    });
+    otpStore[mobileNumber] = otp;
+    await twilioClient.messages.create({
+      body: `Your OTP is ${otp}`,
+      from: process.env.TWILIO_PHONE_NUMBER,
+      to: mobileNumber,
+    });
+
+    res.status(200).json({ message: "OTP sent successfully" });
+  } catch (error) {
+    if (error.code === 21608) {
+      res
+        .status(400)
+        .json({ message: "Invalid phone number or region not supported" });
+    } else {
+      next(error);
+    }
+  }
+};
+
+export const verifyOtp = async (req, res, next) => {
+  try {
+    const { mobileNumber, otp } = req.body;
+    if (otpStore[mobileNumber] === otp) {
+      delete otpStore[mobileNumber];
+      res.status(200).json({ message: "OTP verified successfully" });
+    } else {
+      res.status(400).json({ message: "Invalid OTP" });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const register = async (req, res, next) => {
   try {
@@ -60,7 +114,6 @@ export const register = async (req, res, next) => {
           responderType = "defaultType";
       }
 
-      // Create a new responder
       const responder = new Responder({
         user: savedUser._id,
         responderType: responderType,
@@ -106,6 +159,6 @@ export const login = async (req, res, next) => {
       user,
     });
   } catch (error) {
-    next(error); // Pass the error to the next middleware
+    next(error);
   }
 };

@@ -36,11 +36,9 @@ export const updateUser = async (req, res, next) => {
 
     if (req.body.username) {
       if (req.body.username.length < 7 || req.body.username.length > 20) {
-        return res
-          .status(400)
-          .json({
-            message: "Username must be between 7 and 20 characters long",
-          });
+        return res.status(400).json({
+          message: "Username must be between 7 and 20 characters long",
+        });
       }
       if (req.body.username.includes(" ")) {
         return res
@@ -48,21 +46,18 @@ export const updateUser = async (req, res, next) => {
           .json({ message: "Username must not contain spaces" });
       }
       if (!req.body.username.match(/^[a-zA-Z0-9]+$/)) {
-        return res
-          .status(400)
-          .json({
-            message: "Username must only contain alphanumeric characters",
-          });
+        return res.status(400).json({
+          message: "Username must only contain alphanumeric characters",
+        });
       }
     }
 
     const { role, profession, experience, city, age, ...updatedFields } =
       req.body;
-    const updateFields = updatedFields;
 
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
-      { $set: updateFields },
+      { $set: updatedFields },
       { new: true }
     );
 
@@ -70,7 +65,7 @@ export const updateUser = async (req, res, next) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const { password, ...rest } = updatedUser.toObject(); // Use toObject() to convert Mongoose document to plain JavaScript object
+    const { password, ...rest } = updatedUser.toObject();
     res.status(200).json(rest);
   } catch (error) {
     console.error(error);
