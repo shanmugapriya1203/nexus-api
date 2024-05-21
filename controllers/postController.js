@@ -115,6 +115,26 @@ const getThreadWithLikeCount = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+const getReplies = async (req, res) => {
+  try {
+    const { threadId } = req.params;
+    const thread = await Post.findById(threadId)
+      .populate({
+        path: "comments",
+        populate: { path: "author", select: "name profilePicture" },
+      })
+      .select("comments");
+
+    if (!thread) {
+      return res.status(404).json({ message: "Thread not found" });
+    }
+
+    res.json(thread.comments);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 export {
   getThreads,
@@ -123,4 +143,5 @@ export {
   addReply,
   likeThread,
   getThreadWithLikeCount,
+  getReplies,
 };

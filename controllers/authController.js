@@ -86,9 +86,11 @@ export const register = async (req, res, next) => {
       experience: req.body.experience,
       skills: req.body.skills,
       availabilityDropdown: req.body.availabilityDropdown,
+      profilePicture: "", // Default to empty string
     });
 
     const savedUser = await newUser.save();
+
     if (req.body.role === "emergencyresponder" && req.body.profession) {
       let responderType = "";
       switch (req.body.profession) {

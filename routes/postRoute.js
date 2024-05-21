@@ -2,6 +2,7 @@ import express from "express";
 import {
   addReply,
   createThread,
+  getReplies,
   getThreadById,
   getThreadWithLikeCount,
   getThreads,
@@ -17,4 +18,5 @@ router.get("/:id", getThreadById);
 router.post("/:postId/like", verifyToken, likeThread);
 router.post("/:id/reply", verifyToken, addReply);
 router.get("/:postId", getThreadWithLikeCount);
+router.get("/:threadId/replies", getReplies);
 export default router;
