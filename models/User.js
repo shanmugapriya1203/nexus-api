@@ -31,11 +31,12 @@ const userSchema = new mongoose.Schema(
     availabilityDropdown: { type: String },
     isAdmin: { type: Boolean, default: false },
     assignedTasks: [{ type: mongoose.Types.ObjectId, ref: "Task" }],
+    assignedIncidents: [{ type: mongoose.Types.ObjectId, ref: "Incident" }],
     responderType: { type: String, default: "defaultType" },
     certifications: [certificationSchema],
     profilePicture: {
       type: String,
-      defaut:
+      default:
         "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
     },
   },

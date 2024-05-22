@@ -1,5 +1,6 @@
 import Incident from "../models/Incident.js";
 import Responder from "../models/Responder.js";
+import User from "../models/User.js";
 export const createIncident = async (req, res) => {
   try {
     const {
@@ -130,16 +131,38 @@ export const assignIncidentToResponder = async (req, res) => {
   try {
     const { incidentId } = req.params;
     const { responderId } = req.body;
-    const incident = await Incident.findOne({ _id: incidentId });
+    const incident = await Incident.findOneAndUpdate(
+      { _id: incidentId },
+      { assignedResponder: responderId },
+      { new: true }
+    );
+
     if (!incident) {
       return res.status(404).json({ message: "Incident not found" });
     }
-    incident.assignedResponder = responderId;
+    const responder = await Responder.findByIdAndUpdate(
+      responderId,
+      { $addToSet: { assignedIncidents: incidentId } },
+      { new: true }
+    );
 
-    await incident.save();
-    res
-      .status(200)
-      .json({ message: "Incident assigned to responder successfully" });
+    if (!responder) {
+      return res.status(404).json({ message: "Responder not found" });
+    }
+    const user = await User.findByIdAndUpdate(
+      responder.user,
+      { $addToSet: { assignedIncidents: incidentId } },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "Incident assigned to responder successfully",
+      incident,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });

@@ -57,17 +57,22 @@ export const verifyOtp = async (req, res, next) => {
     next(error);
   }
 };
-
 export const register = async (req, res, next) => {
   try {
-    const existingUser = await User.findOne({ username: req.body.username });
-
-    if (existingUser) {
+    const existingUserByUsername = await User.findOne({
+      username: req.body.username,
+    });
+    if (existingUserByUsername) {
       const error = new Error("Username already exists");
       error.statusCode = 400;
       throw error;
     }
-
+    const existingUserByEmail = await User.findOne({ email: req.body.email });
+    if (existingUserByEmail) {
+      const error = new Error("Email already exists");
+      error.statusCode = 400;
+      throw error;
+    }
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     const newUser = new User({
@@ -86,52 +91,59 @@ export const register = async (req, res, next) => {
       experience: req.body.experience,
       skills: req.body.skills,
       availabilityDropdown: req.body.availabilityDropdown,
-      profilePicture: "", // Default to empty string
+      profilePicture:
+        req.body.profilePicture ||
+        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
     });
 
     const savedUser = await newUser.save();
 
     if (req.body.role === "emergencyresponder" && req.body.profession) {
-      let responderType = "";
-      switch (req.body.profession) {
-        case "firefighter":
-          responderType = "firefighter";
-          break;
-        case "nurse":
-          responderType = "nurse";
-          break;
-        case "doctor":
-          responderType = "doctor";
-          break;
-        case "engineer":
-          responderType = "engineer";
-          break;
-        case "paramedic":
-          responderType = "paramedic";
-          break;
-        case "technician":
-          responderType = "technician";
-          break;
-        default:
-          responderType = "defaultType";
+      const validResponderTypes = [
+        "firefighter",
+        "nurse",
+        "doctor",
+        "engineer",
+        "paramedic",
+        "technician",
+      ];
+
+      const responderType = validResponderTypes.includes(req.body.profession)
+        ? req.body.profession
+        : undefined;
+
+      if (responderType) {
+        const responder = new Responder({
+          user: savedUser._id,
+          responderType: responderType,
+        });
+        await responder.save();
       }
-
-      const responder = new Responder({
-        user: savedUser._id,
-        responderType: responderType,
-      });
-      await responder.save();
     }
-
     const token = generateToken({
       id: savedUser._id,
       username: savedUser.username,
     });
+
     res
       .status(201)
-      .json({ message: "User registered successfully", token, savedUser });
+      .json({
+        message: "User registered successfully",
+        token,
+        user: savedUser,
+      });
   } catch (error) {
-    next(error);
+    if (error.code === 11000) {
+      if (error.keyPattern.username) {
+        res.status(400).json({ message: "Username already exists" });
+      } else if (error.keyPattern.email) {
+        res.status(400).json({ message: "Email already exists" });
+      } else {
+        res.status(400).json({ message: "Duplicate key error" });
+      }
+    } else {
+      next(error);
+    }
   }
 };
 
