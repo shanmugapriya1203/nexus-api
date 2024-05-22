@@ -203,7 +203,7 @@ export const getIncidentsBySeverity = async (req, res) => {
   try {
     const { severity } = req.query;
     const incidents = await Incident.find({ severity });
-
+    console.log(incidents);
     res.status(200).json({ incidents });
   } catch (error) {
     console.error(error);

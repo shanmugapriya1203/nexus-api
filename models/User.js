@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
     role: { type: String, enum: validRoles, required: true },
     fullName: { type: String, required: true },
     city: { type: String, required: true },
-    area: { type: String, required: true },
+    area: { type: String },
     age: { type: Number, required: true },
     bloodGroup: { type: String },
     profession: { type: String },

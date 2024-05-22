@@ -125,13 +125,11 @@ export const register = async (req, res, next) => {
       username: savedUser.username,
     });
 
-    res
-      .status(201)
-      .json({
-        message: "User registered successfully",
-        token,
-        user: savedUser,
-      });
+    res.status(201).json({
+      message: "User registered successfully",
+      token,
+      user: savedUser,
+    });
   } catch (error) {
     if (error.code === 11000) {
       if (error.keyPattern.username) {
