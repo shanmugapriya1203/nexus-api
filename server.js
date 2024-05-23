@@ -33,8 +33,16 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(cors({ credentials: true }));
-app.use(express.json());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://dreamy-donut-658ced.netlify.app",
+    ],
+    credentials: true,
+  })
+);
+app.use(express.json({ urlencoded: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
