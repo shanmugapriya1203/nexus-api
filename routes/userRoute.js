@@ -4,6 +4,7 @@ import {
   getUserById,
   signOut,
   updateUser,
+  updateUserRole,
 } from "../controllers/userController.js";
 import { verifyToken } from "../utils/authUtils.js";
 import { forgotPassword } from "../controllers/forgotassword.js";
@@ -15,5 +16,5 @@ router.put("/update/:userId", verifyToken, updateUser);
 router.post("/signout", signOut);
 router.post("/forgot-password", forgotPassword);
 router.get("/getall", getTotalUsers);
-
+router.put("/updaterole", updateUserRole);
 export default router;

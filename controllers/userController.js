@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import { errorHandler } from "./../utils/error.js";
 import bcrypt from "bcryptjs";
-
+import { validRoles } from "../models/User.js";
 export const getUserById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -83,5 +83,28 @@ export const signOut = (req, res, next) => {
       .json("User has been signed out");
   } catch (error) {
     next(error);
+  }
+};
+export const updateUserRole = async (req, res) => {
+  const { userId, newRole } = req.body;
+  console.log("Request Body:", req.body);
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!validRoles.includes(newRole)) {
+      return res.status(400).json({ message: "Invalid role" });
+    }
+
+    user.role = newRole;
+    await user.save();
+
+    return res.status(200).json({ message: "User role updated successfully" });
+  } catch (error) {
+    console.error("Error updating user role:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

@@ -11,18 +11,18 @@ import {
   getIncidentsByLocation,
   getIncidentsBySeverity,
 } from "../controllers/incidentController.js";
-
+import { isAdmin } from "./../utils/authMiddleware.js";
 const router = express.Router();
 
 router.get("/responders", getAllResponders);
 router.get("/incidents", getIncidentsByLocation);
 router.get("/incidents", getIncidentsBySeverity);
-router.post("/:incidentId/assign", assignIncidentToResponder);
+router.post("/:incidentId/assign", isAdmin, assignIncidentToResponder);
 router.put("/:incidentId/status", updateIncidentStatus);
-router.post("/:userId", createIncident);
-router.put("/:incidentId", updateIncident);
+router.post("/:userId", isAdmin, createIncident);
+router.put("/:incidentId", isAdmin, updateIncident);
 router.get("/:incidentId", getIncidentById);
 router.get("/", getAllIncidents);
-router.delete("/:incidentId", deleteIncident);
+router.delete("/:incidentId", isAdmin, deleteIncident);
 
 export default router;

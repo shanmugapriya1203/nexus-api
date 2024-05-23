@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const validRoles = ["user", "volunteer", "emergencyresponder", "admin"];
+export const validRoles = ["user", "volunteer", "emergencyresponder", "admin"];
 
 const certificationSchema = new mongoose.Schema({
   certificationName: { type: String, required: true },
