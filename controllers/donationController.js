@@ -18,3 +18,12 @@ export const donateSupplies = async (req, res) => {
     res.status(500).json({ message: "Failed to submit donation." });
   }
 };
+export const getAllDonations = async (req, res) => {
+  try {
+    const donations = await Donation.find();
+    res.status(200).json(donations);
+  } catch (error) {
+    console.error("Error retrieving donations:", error);
+    res.status(500).json({ message: "Failed to retrieve donations." });
+  }
+};

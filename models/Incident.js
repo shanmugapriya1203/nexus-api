@@ -40,6 +40,7 @@ const IncidentSchema = new mongoose.Schema(
           "paramedic",
           "engineer",
           "technician",
+          "police",
         ],
         required: true,
       },

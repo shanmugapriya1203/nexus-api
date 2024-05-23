@@ -9,14 +9,21 @@ export const getUserById = async (req, res, next) => {
     if (!user) {
       return next(errorHandler(404, "User not found"));
     }
-    //collect the remaining property excluding password and asign them to rest variable .. It create a new object except password
+
     const { password, ...rest } = user._doc;
     res.status(200).json(rest);
   } catch (error) {
     next(error);
   }
 };
-
+export const getTotalUsers = async (req, res, next) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    res.status(200).json({ totalUsers });
+  } catch (error) {
+    next(error);
+  }
+};
 export const updateUser = async (req, res, next) => {
   if (req.user.id !== req.params.userId) {
     return res

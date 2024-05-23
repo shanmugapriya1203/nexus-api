@@ -16,6 +16,7 @@ const responderSchema = new mongoose.Schema({
       "engineer",
       "paramedic",
       "technician",
+      "police",
     ],
   },
   availability: {

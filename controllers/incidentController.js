@@ -173,12 +173,34 @@ export const updateIncidentStatus = async (req, res) => {
   try {
     const { incidentId } = req.params;
     const { status } = req.body;
+
+    console.log("Incident ID:", incidentId);
+    console.log("Status:", status);
+
     const incident = await Incident.findById(incidentId);
+    console.log("Incident:", incident);
+
     if (!incident) {
       return res.status(404).json({ message: "Incident not found" });
     }
+
+    if (status === "Closed") {
+      const user = await Responder.findByIdAndUpdate(
+        incident.assignedResponder,
+        { $inc: { points: 10 } },
+        { new: true }
+      );
+
+      console.log("User:", user);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+    }
+
     incident.status = status;
     await incident.save();
+
     res.status(200).json({ message: "Incident status updated successfully" });
   } catch (error) {
     console.error(error);
@@ -203,7 +225,7 @@ export const getIncidentsBySeverity = async (req, res) => {
   try {
     const { severity } = req.query;
     const incidents = await Incident.find({ severity });
-    console.log(incidents);
+
     res.status(200).json({ incidents });
   } catch (error) {
     console.error(error);

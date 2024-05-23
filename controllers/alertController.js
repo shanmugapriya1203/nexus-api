@@ -1,9 +1,8 @@
 import Alert from "../models/Alert.js";
 export const getAllAlerts = async (req, res) => {
   try {
-    const alerts = await Alert.find();
+    const alerts = await Alert.find().sort({ timestamp: -1 });
     res.json(alerts);
-    console.log(alerts);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

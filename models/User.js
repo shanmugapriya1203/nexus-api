@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema(
     assignedIncidents: [{ type: mongoose.Types.ObjectId, ref: "Incident" }],
     responderType: { type: String, default: "defaultType" },
     certifications: [certificationSchema],
+    points: { type: Number, default: 0 },
     profilePicture: {
       type: String,
       default:

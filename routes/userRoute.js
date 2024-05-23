@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  getTotalUsers,
   getUserById,
   signOut,
   updateUser,
@@ -13,5 +14,6 @@ router.get("/get/:id", getUserById);
 router.put("/update/:userId", verifyToken, updateUser);
 router.post("/signout", signOut);
 router.post("/forgot-password", forgotPassword);
+router.get("/getall", getTotalUsers);
 
 export default router;
