@@ -1,19 +1,22 @@
-// const shelterController = require('../controllers/shelter.controller');
-// const authMiddleware = require('../middlewares/authMiddleware');
 
-// // Create a new shelter (accessible only to admin)
-// router.post('/', authMiddleware.isAdmin, shelterController.createShelter);
+## NEXUS
 
-// // Read all shelters (accessible to all users)
-// router.get('/', shelterController.getAllShelters);
+Nexus is a robust disaster management platform engineered with the MERN stack. The backend is built with Node.js and Express.js to handle data communication and business logic efficiently.
 
-// // Read a specific shelter (accessible to all users)
-// router.get('/:shelterId', shelterController.getShelter);
 
-// // Update a shelter (accessible only to admin)
-// router.put('/:shelterId', authMiddleware.isAdmin, shelterController.updateShelter);
 
-// // Delete a shelter (accessible only to admin)
-// router.delete('/:shelterId', authMiddleware.isAdmin, shelterController.deleteShelter);
 
-// module.exports = router;
+## Features
+
+- Real-time Alert System: Provides instant updates about disasters.
+- Resource Management: CRUD operations for managing emergency resources.
+- Community Forums: Facilitates communication among community members.
+- Emergency Planning Tools: Personalized emergency plans.
+- Interactive Maps: Real-time disaster information
+
+- Volunteer Management: Coordinates volunteer efforts.
+
+- Allows users to contribute to disaster relief efforts.
+## Tech Stack
+
+**Server:** NodeJS, MongoDB, ExpressJS,WebSocket,Stripe,
