@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export const validRoles = ["user", "volunteer", "emergencyresponder", "admin"];
+export const validRoles = ["volunteer", "admin"];
 
 const certificationSchema = new mongoose.Schema({
   certificationName: { type: String, required: true },
@@ -33,8 +33,6 @@ const userSchema = new mongoose.Schema(
     assignedTasks: [{ type: mongoose.Types.ObjectId, ref: "Task" }],
     assignedIncidents: [{ type: mongoose.Types.ObjectId, ref: "Incident" }],
     responderType: { type: String, default: "defaultType" },
-    certifications: [certificationSchema],
-    points: { type: Number, default: 0 },
     profilePicture: {
       type: String,
       default:
