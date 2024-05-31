@@ -1,29 +1,41 @@
 import mongoose from "mongoose";
+const { Schema } = mongoose;
 
-const responderSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
+const responderSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    location: {
+      type: String,
+      required: true,
+    },
+    mobileNumber: {
+      type: String,
+      required: true,
+    },
+    profession: {
+      type: String,
+      enum: [
+        "firefighter",
+        "nurse",
+        "doctor",
+        "engineer",
+        "paramedic",
+        "technician",
+        "police",
+      ],
+      required: true,
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
-  responderType: {
-    type: String,
-    required: true,
-    enum: [
-      "firefighter",
-      "nurse",
-      "doctor",
-      "engineer",
-      "paramedic",
-      "technician",
-      "police",
-    ],
-  },
-  availability: {
-    type: Boolean,
-    default: true,
-  },
-});
+  { timestamps: true }
+);
 
 const Responder = mongoose.model("Responder", responderSchema);
 

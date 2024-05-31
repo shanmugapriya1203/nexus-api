@@ -13,7 +13,7 @@ import {
 } from "../controllers/volunteerController.js";
 const router = express.Router();
 
-router.get("/", isAdmin, getAllVolunteers);
+router.get("/", getAllVolunteers);
 
 router.post("/createtask", isAdmin, creatTask);
 router.get("/tasks", getAllTasks);

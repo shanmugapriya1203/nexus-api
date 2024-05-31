@@ -19,7 +19,7 @@ router.get("/incidents", getIncidentsByLocation);
 router.get("/incidents", getIncidentsBySeverity);
 router.post("/:incidentId/assign", isAdmin, assignIncidentToResponder);
 router.put("/:incidentId/status", updateIncidentStatus);
-router.post("/:userId", isAdmin, createIncident);
+router.post("/:userId", createIncident);
 router.put("/:incidentId", isAdmin, updateIncident);
 router.get("/:incidentId", getIncidentById);
 router.get("/", getAllIncidents);

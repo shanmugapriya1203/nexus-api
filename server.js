@@ -15,6 +15,7 @@ import postRoutes from "./routes/postRoute.js";
 import stripeRoutes from "./routes/stripeRoute.js";
 import supplyRoutes from "./routes/donationRoute.js";
 import hospitalRoutes from "./routes/hospitalRoute.js";
+import responerRoutes from "./routes/responderRoute.js";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 
@@ -56,6 +57,7 @@ app.use("/api/threads", postRoutes);
 app.use("/api/stripe", stripeRoutes);
 app.use("/api/donations", supplyRoutes);
 app.use("/api/hospital", hospitalRoutes);
+app.use("/api/responder", responerRoutes);
 io.on("connection", (socket) => {
   console.log("New client connected");
 
