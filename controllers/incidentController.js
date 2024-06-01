@@ -1,6 +1,7 @@
 import Incident from "../models/Incident.js";
 import Responder from "../models/Responder.js";
 import User from "../models/User.js";
+
 export const createIncident = async (req, res) => {
   try {
     const {
@@ -26,6 +27,12 @@ export const createIncident = async (req, res) => {
     });
 
     const savedIncident = await incident.save();
+
+    req.io.emit("emergency", {
+      type: "newIncident",
+      data: savedIncident,
+    });
+
     res.status(201).json(savedIncident);
   } catch (error) {
     console.error(error);
