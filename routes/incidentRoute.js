@@ -6,8 +6,6 @@ import {
   getAllIncidents,
   deleteIncident,
   getAllResponders,
-  assignIncidentToResponder,
-  updateIncidentStatus,
   getIncidentsByLocation,
   getIncidentsBySeverity,
 } from "../controllers/incidentController.js";
@@ -17,8 +15,6 @@ const router = express.Router();
 router.get("/responders", getAllResponders);
 router.get("/incidents", getIncidentsByLocation);
 router.get("/incidents", getIncidentsBySeverity);
-router.post("/:incidentId/assign", isAdmin, assignIncidentToResponder);
-router.put("/:incidentId/status", updateIncidentStatus);
 router.post("/:userId", createIncident);
 router.put("/:incidentId", isAdmin, updateIncident);
 router.get("/:incidentId", getIncidentById);
