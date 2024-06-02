@@ -17,7 +17,7 @@ router.get("/", getAllVolunteers);
 
 router.post("/createtask", isAdmin, creatTask);
 router.get("/tasks", getAllTasks);
-router.post("/tasks/assign", isAdmin, assignTaskToVolunteer);
+router.post("/tasks/assign", assignTaskToVolunteer);
 router.get("/tasks/:volunteerId", getTasksByVolunteerId);
 router.get("/task/:taskId", getTaskById);
 router.put("/tasks/:updateId", updateTask);
