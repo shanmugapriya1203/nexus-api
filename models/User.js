@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export const validRoles = ["volunteer", "admin"];
+export const validRoles = ["volunteer", "admin", "lead"];
 
 const certificationSchema = new mongoose.Schema({
   certificationName: { type: String, required: true },
@@ -22,9 +22,9 @@ const userSchema = new mongoose.Schema(
     fullName: { type: String, required: true },
     city: { type: String, required: true },
     area: { type: String },
-    age: { type: Number, required: true },
+    age: { type: Number },
     bloodGroup: { type: String },
-    profession: { type: String, required: true },
+    profession: { type: String },
     experience: { type: String },
     mobileNumber: { type: String },
     skills: { type: [String] },
@@ -38,7 +38,10 @@ const userSchema = new mongoose.Schema(
       default:
         "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
     },
+    resetPasswordToken: { type: String },
+    resetPasswordExpire: { type: Date },
   },
+
   { timestamps: true }
 );
 

@@ -1,7 +1,11 @@
+import crypto from "crypto";
 import User from "../models/User.js";
 import { errorHandler } from "./../utils/error.js";
+import asyncHandler from "express-async-handler";
 import bcrypt from "bcryptjs";
+import { sendMail } from "../utils/mail.js";
 import { validRoles } from "../models/User.js";
+
 export const getUserById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -16,6 +20,7 @@ export const getUserById = async (req, res, next) => {
     next(error);
   }
 };
+
 export const getTotalUsers = async (req, res, next) => {
   try {
     const totalUsers = await User.countDocuments();
@@ -24,6 +29,7 @@ export const getTotalUsers = async (req, res, next) => {
     next(error);
   }
 };
+
 export const updateUser = async (req, res, next) => {
   if (req.user.id !== req.params.userId) {
     return res
@@ -85,6 +91,7 @@ export const signOut = (req, res, next) => {
     next(error);
   }
 };
+
 export const updateUserRole = async (req, res) => {
   const { userId, newRole } = req.body;
   console.log("Request Body:", req.body);
@@ -108,3 +115,50 @@ export const updateUserRole = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (user) {
+    const resetToken = crypto.randomBytes(25).toString("hex");
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpire = Date.now() + 3600000;
+    await user.save();
+
+    const url = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
+    const text = `Click on this link to reset your password: ${url}. If you did not request this, please ignore.`;
+
+    await sendMail(user.email, "Reset Password", text);
+
+    res.status(200).json({
+      message: `Reset password link has been sent to ${user.email}`,
+    });
+  } else {
+    res.status(401);
+    throw new Error("Invalid Credentials");
+  }
+});
+
+export const resetPassword = asyncHandler(async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  const user = await User.findOne({
+    resetPasswordToken: token,
+    resetPasswordExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    res.status(400);
+    throw new Error("Invalid or expired token");
+  }
+
+  user.password = await bcrypt.hash(password, 10);
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+  await user.save();
+
+  res.status(200).json({
+    message: "Password has been reset successfully",
+  });
+});
