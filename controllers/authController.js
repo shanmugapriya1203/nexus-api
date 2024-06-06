@@ -94,6 +94,6 @@ export const login = async (req, res, next) => {
       user,
     });
   } catch (error) {
-    next(error);
+    console.log(error);
   }
 };
