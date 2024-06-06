@@ -8,22 +8,24 @@ import Responder from "../models/Responder.js";
 dotenv.config();
 export const register = async (req, res, next) => {
   try {
+    // Check if the username already exists
     const existingUserByUsername = await User.findOne({
       username: req.body.username,
     });
     if (existingUserByUsername) {
-      const error = new Error("Username already exists");
-      error.statusCode = 400;
-      throw error;
+      return res.status(400).json({ message: "Username already exists" });
     }
+
+    // Check if the email already exists
     const existingUserByEmail = await User.findOne({ email: req.body.email });
     if (existingUserByEmail) {
-      const error = new Error("Email already exists");
-      error.statusCode = 400;
-      throw error;
+      return res.status(400).json({ message: "Email already exists" });
     }
+
+    // Hash the password
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
+    // Create a new user
     const newUser = new User({
       username: req.body.username,
       email: req.body.email,
@@ -45,53 +47,27 @@ export const register = async (req, res, next) => {
         "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
     });
 
+    // Save the new user
     const savedUser = await newUser.save();
 
-    if (req.body.role === "emergencyresponder" && req.body.profession) {
-      const validResponderTypes = [
-        "firefighter",
-        "nurse",
-        "doctor",
-        "engineer",
-        "paramedic",
-        "technician",
-      ];
-
-      const responderType = validResponderTypes.includes(req.body.profession)
-        ? req.body.profession
-        : undefined;
-
-      if (responderType) {
-        const responder = new Responder({
-          user: savedUser._id,
-          responderType: responderType,
-        });
-        await responder.save();
-      }
-    }
+    // Generate a token for the new user
     const token = generateToken({
       id: savedUser._id,
       username: savedUser.username,
     });
 
+    // Respond with the user data and token
     res.status(201).json({
       message: "User registered successfully",
       token,
       user: savedUser,
     });
   } catch (error) {
-    if (error.code === 11000) {
-      if (error.keyPattern.username) {
-        res.status(400).json({ message: "Username already exists" });
-      } else if (error.keyPattern.email) {
-        res.status(400).json({ message: "Email already exists" });
-      } else {
-        res.status(400).json({ message: "Duplicate key error" });
-      }
-    } else {
-      next(error);
-    }
+    console.log(error);
   }
+
+  // Pass other errors to the error handling middleware
+  next(error);
 };
 
 export const login = async (req, res, next) => {
