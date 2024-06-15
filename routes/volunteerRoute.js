@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.get("/", getAllVolunteers);
 
-router.post("/createtask", isAdmin, creatTask);
+router.post("/createtask", creatTask);
 router.get("/tasks", getAllTasks);
 router.post("/tasks/assign", assignTaskToVolunteer);
 router.get("/tasks/:volunteerId", getTasksByVolunteerId);
